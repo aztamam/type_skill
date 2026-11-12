@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ketik10 — Latihan Mengetik 10 Jari</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="logo">K</span>Ketik<b>10</b></div>
+    <nav>
+      <button data-screen="practice" class="active" data-i18n="nav.practice">Latihan</button>
+      <button data-screen="test" data-i18n="nav.test">Tes</button>
+      <button data-screen="tips" data-i18n="nav.tips">Tips</button>
+      <button data-screen="game" data-i18n="nav.game">Game</button>
+    </nav>
+    <div class="hdr-right">
+      <div class="seg lang-seg" id="uiLang" data-i18n-title="hdr.lang"><button data-l="id">ID</button><button data-l="en">EN</button></div>
+      <button class="profile-pill" id="profileBtn" data-i18n-title="hdr.profile">Masuk</button>
+      <div class="star-pill" id="totalStars" data-i18n-title="hdr.stars">★ 0</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ LATIHAN ============ -->
+    <section id="screen-practice" class="screen active">
+      <div class="lesson-head">
+        <div class="crumb" id="pLesson"></div>
+        <h1 id="pExercise"></h1>
+        <p class="goal" id="pGoal"></p>
+        <div class="finger-hint" id="pFinger"></div>
+      </div>
+
+      <div class="stage">
+        <canvas id="pCanvas" class="hw"></canvas>
+        <div class="tiles-view" id="pTiles"><div class="tiles-track" id="pTrack"></div></div>
+        <div class="strip-view" id="pStrip"><div class="strip-band"><div class="strip-track" id="pStripTrack"></div></div></div>
+        <div class="lines-view" id="pLines"></div>
+        <div class="caps-warn" id="capsWarn" data-i18n="caps">Caps Lock aktif</div>
+      </div>
+
+      <div class="controls">
+        <button class="icon" id="pRestart" data-i18n-title="p.restart">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+        </button>
+        <div class="bar"><div id="pBar"></div></div>
+        <button class="icon" id="pSettings" data-i18n-title="p.settings">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 3v6M6 15v6M12 3v2M12 11v10M18 3v10M18 19v2"/><circle cx="6" cy="12" r="2.4"/><circle cx="12" cy="8" r="2.4"/><circle cx="18" cy="16" r="2.4"/></svg>
+        </button>
+      </div>
+
+      <div class="stats">
+        <span>WPM <b id="pWpm">0</b></span>
+        <span><i data-i18n="st.acc">Akurasi</i> <b id="pAcc">100%</b></span>
+        <span><i data-i18n="st.err">Error</i> <b id="pErr">0</b></span>
+        <span><i data-i18n="st.target">Target</i> <b id="pTarget">-</b></span>
+      </div>
+
+      <div class="kb" id="kb"></div>
+    </section>
+
+    <!-- ============ TES ============ -->
+    <section id="screen-test" class="screen">
+      <div class="lesson-head">
+        <div class="crumb" data-i18n="test.crumb">Tes kecepatan</div>
+        <h1 data-i18n="test.h1">Seberapa cepat kamu mengetik?</h1>
+        <div class="seg" id="tLang">
+          <button data-l="id" data-i18n="test.langId">Indonesia</button>
+          <button data-l="en" data-i18n="test.langEn">English</button>
+        </div>
+        <div class="seg" id="tMode">
+          <button data-m="words" data-i18n="test.words" data-i18n-title="test.wordsTip">Kata sederhana</button>
+          <button data-m="sentences" data-i18n="test.sentences" data-i18n-title="test.sentencesTip">Kalimat lengkap</button>
+        </div>
+        <div class="seg" id="tDur">
+          <button data-d="30" data-i18n="test.d30">30 detik</button>
+          <button data-d="60" class="active" data-i18n="test.d60">1 menit</button>
+          <button data-d="120" data-i18n="test.d120">2 menit</button>
+        </div>
+      </div>
+      <div class="test-box" id="tBox"><div class="test-text" id="tText"></div></div>
+      <div class="controls">
+        <button class="icon" id="tRestart" data-i18n-title="test.newText">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+        </button>
+        <div class="bar"><div id="tBar"></div></div>
+        <span class="timer" id="tTime">60</span>
+      </div>
+      <div class="stats">
+        <span>WPM <b id="tWpm">0</b></span>
+        <span><i data-i18n="st.acc">Akurasi</i> <b id="tAcc">100%</b></span>
+        <span><i data-i18n="st.err">Error</i> <b id="tErr">0</b></span>
+        <span><i data-i18n="st.best">Terbaik</i> <b id="tBest">-</b></span>
+      </div>
+      <p class="muted center" data-i18n="test.note"></p>
+    </section>
+
+    <!-- ============ TIPS ============ -->
+    <section id="screen-tips" class="screen">
+      <div class="tips">
+        <h1 data-i18n="tips.h1">Tips mengetik 10 jari</h1>
+        <div class="tip-grid">
+          <article data-i18n-html="tip1"></article>
+          <article data-i18n-html="tip2"></article>
+          <article data-i18n-html="tip3"></article>
+          <article data-i18n-html="tip4"></article>
+          <article data-i18n-html="tip5"></article>
+          <article data-i18n-html="tip6"></article>
+          <article data-i18n-html="tip7"></article>
+          <article data-i18n-html="tip8"></article>
+        </div>
+        <h3 data-i18n="tips.colors">Warna jari</h3>
+        <div class="legend" id="legend"></div>
+      </div>
+    </section>
+
+    <!-- ============ GAME ============ -->
+    <section id="screen-game" class="screen">
+      <div class="game-top">
+        <div class="hearts" id="gLives"></div>
+        <div class="star-pill" id="gScore">★ 0</div>
+        <div class="muted"><span data-i18n="st.best">Terbaik</span> <b id="gBest">0</b></div>
+      </div>
+      <div class="stage">
+        <canvas id="gCanvas" class="hw"></canvas>
+        <div class="overlay" id="gOverlay">
+          <h2>Highway</h2>
+          <p data-i18n-html="game.desc"></p>
+          <label><span data-i18n="game.level">Huruf dari</span> <select id="gLevel"></select></label>
+          <button class="btn" id="gStart">Mulai <kbd>Space</kbd></button>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="icon" id="gRestart" data-i18n-title="game.restart">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+        </button>
+        <div class="bar"><div id="gBar"></div></div>
+        <span class="timer" id="gSpeed">Lv 1</span>
+      </div>
+      <p class="muted center" data-i18n="game.note"></p>
+    </section>
+  </main>
+
+  <div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/lessons.js"></script>
+  <script src="js/highway.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
