@@ -916,7 +916,7 @@
     const p = activeProfile();
     if (!p) { openNameGate(); return; }
     const others = profList().filter(x => x.id !== root.active);
-    let delArmed = false;
+    let delArmed = false, wipeArmed = false;
     const html = `
       <div class="pk-head"><h2 class="prof-title"><span class="av big">${initial(p.name)}</span>${esc(p.name)}</h2>
         <button class="icon close" data-act="close" title="${t('btn.close')}">✕</button></div>
@@ -931,6 +931,7 @@
         <button class="btn ghost small" data-act="export" title="${t('prof.exportTip')}">${t('prof.export')}</button>
         <label class="btn ghost small" title="${t('prof.importTip')}">${t('prof.import')}<input type="file" accept=".json,application/json" data-change="import" hidden></label>
         <button class="btn ghost small" data-act="del">${t('prof.del')}</button>
+        <button class="btn ghost small" data-act="wipe" title="${t('prof.wipeTip')}">${t('prof.wipe')}</button>
       </div>`;
     openModal(html, {
       close: () => closeModal(),
@@ -938,6 +939,12 @@
       new: () => { closeModal(); openNameGate(); },
       export: exportData,
       import: importData,
+      // wipe everything Ketik10 stored in this browser, then start fresh
+      wipe: b => {
+        if (!wipeArmed) { wipeArmed = true; b.textContent = t('prof.wipeConfirm'); b.classList.add('danger'); return; }
+        try { [ROOT_KEY, LEGACY_KEY, 'ketik10.v1'].forEach(k => localStorage.removeItem(k)); } catch (e) { /* ignore */ }
+        location.reload();
+      },
       del: b => {
         if (!delArmed) { delArmed = true; b.textContent = t('prof.delConfirm'); b.classList.add('danger'); return; }
         delete root.profiles[root.active];

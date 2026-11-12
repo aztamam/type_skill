@@ -86,6 +86,8 @@
       'prof.export': 'Backup ke file', 'prof.exportTip': 'Simpan semua profil ke file .json',
       'prof.import': 'Pulihkan dari file', 'prof.importTip': 'Pulihkan profil dari file backup .json',
       'prof.del': 'Hapus profil ini', 'prof.delConfirm': 'Klik lagi untuk menghapus',
+      'prof.wipe': 'Hapus semua data', 'prof.wipeConfirm': 'Klik lagi: SEMUA profil & pencapaian dihapus',
+      'prof.wipeTip': 'Hapus semua profil, pencapaian, dan riwayat di browser ini',
       'imp.ok': 'Berhasil dipulihkan', 'imp.fail': 'Gagal memulihkan',
       'imp.okMsg': '{n} profil dari file backup sudah dimuat.', 'imp.failMsg': 'File ini bukan backup Ketik10 yang valid.',
 
@@ -221,6 +223,8 @@
       'prof.export': 'Back up to file', 'prof.exportTip': 'Save all profiles to a .json file',
       'prof.import': 'Restore from file', 'prof.importTip': 'Restore profiles from a .json backup file',
       'prof.del': 'Delete this profile', 'prof.delConfirm': 'Click again to delete',
+      'prof.wipe': 'Delete all data', 'prof.wipeConfirm': 'Click again: ALL profiles & achievements will be deleted',
+      'prof.wipeTip': 'Delete every profile, achievement and history entry in this browser',
       'imp.ok': 'Restored', 'imp.fail': 'Restore failed',
       'imp.okMsg': '{n} profile(s) loaded from the backup file.', 'imp.failMsg': 'This is not a valid Ketik10 backup file.',
 
