@@ -337,7 +337,7 @@
   // final challenges use the stacked "lines" view (each line ends with Enter)
   const gen = (kind, title, finger, goal, g, final) => ({ kind, title, finger, goal, gen: g, final: !!final, view: final ? 'lines' : 'highway' });
   const noSpace = (k, finger) => fixed(t('ex.noSpace', { k: short(k) }), finger,
-    t('ex.noSpaceG', { k: lab(k), f: finger.toLowerCase() }), [k.repeat(6), k.repeat(6), k.repeat(6)], '');
+    t('ex.noSpaceG', { k: lab(k), f: finger.toLowerCase() }), [k.repeat(12)], ''); // one row, no scrolling
 
   function fingersOf(keys) {
     const seen = [];

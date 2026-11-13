@@ -56,10 +56,10 @@ h1 { font-size: 27px; margin: 4px 0; letter-spacing: -.01em; }
 /* ---------- tiles view (drills without spaces) ---------- */
 .tiles-view { display: none; justify-content: center; align-items: center; min-height: 210px; }
 .tiles-view.show { display: flex; }
-.tiles-view { overflow: hidden; width: 700px; max-width: 100%; margin: 0 auto; }
-.tiles-track { display: flex; gap: 10px; width: 100%; transition: transform .16s ease-out; padding: 10px 0 14px; }
-.tile { flex: none; width: 60px; height: 60px; border-radius: 12px; background: var(--c); border: 2.5px solid var(--d); box-shadow: 0 6px 0 var(--d);
-  display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: 30px; color: var(--d); transition: background .12s, opacity .16s; }
+.tiles-view { width: 100%; margin: 0 auto; }
+.tiles-track { display: flex; justify-content: center; gap: 10px; width: 100%; padding: 10px 0 14px; --ts: 60px; }
+.tile { flex: none; width: var(--ts); height: var(--ts); border-radius: 12px; background: var(--c); border: 2.5px solid var(--d); box-shadow: 0 6px 0 var(--d);
+  display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: calc(var(--ts) * .5); color: var(--d); transition: background .12s, opacity .16s; }
 .tile.done { background: #fff; border-color: #dfe5ea; box-shadow: none; color: #cfd7dd; }
 .tile.done.bad { color: #f2a3a3; border-color: #f6caca; }
 .tile.cur { transform: translateY(-2px); }
@@ -256,7 +256,6 @@ h3.sec { margin: 18px 0 8px; font-size: 15px; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 720px) {
-  .tile { width: 46px; height: 46px; font-size: 22px; }
   .strip-track { font-size: 40px; }
   header.top { flex-wrap: wrap; padding: 10px 14px; }
   nav button { font-size: 15px; padding: 6px 10px; }

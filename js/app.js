@@ -180,12 +180,14 @@
   const restartExercise = () => { if (P) startExercise(P.li, P.ei); };
 
   // ---- tiles view: a row of key caps, typed caps slide off to the left
-  const TILE = 70; // tile width + gap (px), keep in sync with CSS
+  // ---- tiles view: one static row of key caps; the row never shifts, the exercise ends when it is done
   function buildView() {
     if (P.view === 'tiles') {
       $('#pTrack').innerHTML = P.info.map((inf, i) =>
         `<div class="tile" style="--c:${inf.f.mid};--d:${inf.f.dark}"><span>${esc(P.text[i])}</span></div>`).join('');
       P.nodes = $$('.tile', $('#pTrack'));
+      const n = P.nodes.length, gap = 10, w = $('#pTiles').clientWidth || 860;
+      $('#pTrack').style.setProperty('--ts', Math.max(30, Math.min(64, Math.floor((w - gap * (n - 1)) / n))) + 'px');
     } else if (P.view === 'strip') {
       // oneLine: whole exercise on one line (font shrinks only if it would not fit)
       P.chunks = P.ex.oneLine ? [[0, P.text.length]] : chunkText(P.text, 24);
@@ -238,10 +240,6 @@
       const done = i < P.idx, cur = i === P.idx && !P.done;
       P.nodes[i].className = (P.view === 'tiles' ? 'tile ' : '') +
         (done ? (P.errSet.has(i) ? 'done bad' : 'done') : cur ? 'cur' + (P.errSet.has(i) ? ' err' : '') : '');
-    }
-    {
-      const step = (P.nodes[0].offsetWidth + 10) || TILE;
-      $('#pTrack').style.transform = `translateX(${-(Math.max(0, Math.min(P.idx, P.nodes.length - 1) - 1)) * step}px)`;
     }
   }
 
