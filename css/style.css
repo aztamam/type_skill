@@ -231,6 +231,7 @@ h1 { font-size: 27px; margin: 4px 0; letter-spacing: -.01em; }
 .star-pill { cursor: pointer; }
 .profile-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--soft); border: 0; border-radius: 999px; padding: 4px 14px 4px 4px; font-weight: 700; font-size: 15px; color: var(--ink); cursor: pointer; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .profile-pill:hover { background: #e6ecf1; }
+.dev-tag { font-size: 10px; font-weight: 800; letter-spacing: .05em; background: var(--purple); color: #fff; border-radius: 6px; padding: 2px 5px; margin-left: 2px; }
 .av { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: #fff; display: inline-grid; place-items: center; font-weight: 800; font-size: 13px; flex: none; }
 .av.big { width: 38px; height: 38px; font-size: 17px; }
 .modal-box.mid { width: min(640px, 100%); }

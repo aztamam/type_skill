@@ -28,6 +28,10 @@
   let root = readJSON(ROOT_KEY);
   if (!root || !root.profiles) root = { active: null, profiles: {} };
   const activeProfile = () => (root.active && root.profiles[root.active]) || null;
+  // Developer profiles: can open every lesson in the game and use "free mode".
+  // Note: this is a convenience switch, not security (anyone can type this name).
+  const DEV_NAMES = ['tamam'];
+  const isDev = () => { const p = activeProfile(); return !!p && DEV_NAMES.includes(p.name.trim().toLowerCase()); };
   let prevSeen = activeProfile() ? activeProfile().lastSeen : null;
   let store = activeProfile() ? normalize(activeProfile().data) : defaults();
   function persist() { try { localStorage.setItem(ROOT_KEY, JSON.stringify(root)); } catch (e) { /* storage unavailable */ } }
@@ -51,7 +55,7 @@
   const rec = (li, ei) => store.progress[pkey(li, ei)];
   const isPassed = (li, ei) => !!(rec(li, ei) && rec(li, ei).passed);
   function isUnlocked(li, ei) {
-    if (store.settings.free) return true;
+    if (store.settings.free && isDev()) return true;
     const i = flatIndex(li, ei);
     if (i <= 0) return true;
     const [a, b] = FLAT[i - 1];
@@ -427,7 +431,7 @@
       <div class="pk-settings">
         <label><input type="checkbox" data-act="set" data-k="keyboard" ${s.keyboard ? 'checked' : ''}> ${t('set.keyboard')}</label>
         <label><input type="checkbox" data-act="set" data-k="fingerColors" ${s.fingerColors ? 'checked' : ''}> ${t('set.colors')}</label>
-        <label title="${t('set.freeTip')}"><input type="checkbox" data-act="set" data-k="free" ${s.free ? 'checked' : ''}> ${t('set.free')}</label>
+        ${isDev() ? `<label title="${t('set.freeTip')}"><input type="checkbox" data-act="set" data-k="free" ${s.free ? 'checked' : ''}> ${t('set.free')}</label>` : ''}
         <span class="set-lang">${t('set.lang')}: <span class="seg lang-seg">
           <button data-act="lang" data-l="id" class="${I18N.lang === 'id' ? 'active' : ''}">Indonesia</button>
           <button data-act="lang" data-l="en" class="${I18N.lang === 'en' ? 'active' : ''}">English</button></span></span>
@@ -591,13 +595,16 @@
 
   function fillLevels() {
     const cfg = gameCfg();
+    // developer: every lesson; other users: only lessons already reached in practice.
+    // The default is the furthest lesson reached.
+    const list = isDev() ? levelLessons : levelLessons.filter(li => isUnlocked(li, 0));
     let best = levelLessons[0];
-    gLevel.innerHTML = levelLessons.map(li => {
-      const L = LESSONS[li], open = isUnlocked(li, 0);
-      if (open) best = li;
-      return `<option value="${li}" ${open ? '' : 'disabled'}>Lesson ${L.n} — ${esc(L.title)}</option>`;
+    gLevel.innerHTML = list.map(li => {
+      const L = LESSONS[li];
+      if (isUnlocked(li, 0)) best = li;
+      return `<option value="${li}">Lesson ${L.n} — ${esc(L.title)}</option>`;
     }).join('');
-    const want = cfg.li != null && levelLessons.includes(cfg.li) && isUnlocked(cfg.li, 0) ? cfg.li : best;
+    const want = cfg.li != null && list.includes(cfg.li) ? cfg.li : best;
     gLevel.value = String(want);
     syncGameSetup();
   }
@@ -855,7 +862,7 @@
 
   function refreshProfileBtn() {
     const p = activeProfile();
-    $('#profileBtn').innerHTML = p ? `<span class="av">${initial(p.name)}</span>${esc(p.name)}` : t('prof.login');
+    $('#profileBtn').innerHTML = p ? `<span class="av">${initial(p.name)}</span>${esc(p.name)}${isDev() ? '<span class="dev-tag">DEV</span>' : ''}` : t('prof.login');
   }
 
   function openNameGate() {
