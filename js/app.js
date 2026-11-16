@@ -572,19 +572,49 @@
   const gHw = new Highway($('#gCanvas'));
   let G = null;
   const gLevel = $('#gLevel');
-  const levelLessons = LESSONS.map((L, li) => li).filter(li => LESSONS[li].kind !== 'special' && LESSONS[li].keys.length >= 2);
+  // start speed (rows/sec) and extra speed every 10 hits, per difficulty level
+  const GAME_LV = [{ v: 0.4, inc: 0.06 }, { v: 0.6, inc: 0.08 }, { v: 0.85, inc: 0.1 }, { v: 1.15, inc: 0.12 }, { v: 1.5, inc: 0.15 }];
+  const levelLessons = LESSONS.map((L, li) => li)
+    .filter(li => (LESSONS[li].kind !== 'special' && LESSONS[li].keys.length >= 2) || LESSONS[li].special === 'numbers');
+  const gameCfg = () => {
+    store.settings.game = Object.assign({ li: null, set: 'all', lvl: 1 }, store.settings.game || {});
+    return store.settings.game;
+  };
+  function gameKeys(li, set) {
+    const L = LESSONS[li];
+    if (L.special === 'numbers') return '1234567890'.split('');
+    const pick = src => src.filter(k => k !== ' ');
+    const fresh = pick(L.newKeys || []);
+    return set === 'new' && fresh.length >= 2 ? fresh : pick(L.keys);
+  }
+  const gameBestKey = (li, set, lvl) => `${li}-${set}-${lvl}`;
 
   function fillLevels() {
+    const cfg = gameCfg();
     let best = levelLessons[0];
     gLevel.innerHTML = levelLessons.map(li => {
       const L = LESSONS[li], open = isUnlocked(li, 0);
       if (open) best = li;
-      const letters = L.keys.filter(k => /[a-z]/.test(k)).join(' ');
-      return `<option value="${li}" ${open ? '' : 'disabled'}>Lesson ${L.n} (${letters.length > 24 ? t('game.letters', { n: L.keys.length }) : letters})</option>`;
+      return `<option value="${li}" ${open ? '' : 'disabled'}>Lesson ${L.n} — ${esc(L.title)}</option>`;
     }).join('');
-    gLevel.value = String(best);
+    const want = cfg.li != null && levelLessons.includes(cfg.li) && isUnlocked(cfg.li, 0) ? cfg.li : best;
+    gLevel.value = String(want);
+    syncGameSetup();
   }
-  gLevel.addEventListener('change', () => { gLevel.blur(); gameIdle(); });
+  function syncGameSetup() {
+    const cfg = gameCfg(), li = +gLevel.value;
+    $$('#gSet button').forEach(b => b.classList.toggle('active', b.dataset.s === cfg.set));
+    $$('#gLvl button').forEach(b => b.classList.toggle('active', +b.dataset.v === cfg.lvl));
+    $('#gKeys').innerHTML = gameKeys(li, cfg.set).map(k => {
+      const f = KB.charInfo(k).f;
+      return `<span style="background:${f.mid};border-color:${f.dark};color:${f.dark}">${esc(k)}</span>`;
+    }).join('');
+    $('#gBest').textContent = store.best.game[gameBestKey(li, cfg.set, cfg.lvl)] || 0;
+  }
+  gLevel.addEventListener('change', () => { gLevel.blur(); gameCfg().li = +gLevel.value; save(); gameIdle(); });
+  $$('#gSet button').forEach(b => b.addEventListener('click', () => { gameCfg().set = b.dataset.s; save(); gameIdle(); }));
+  $$('#gLvl button').forEach(b => b.addEventListener('click', () => { gameCfg().lvl = +b.dataset.v; save(); gameIdle(); }));
+  const lvName = lvl => t('game.lv' + (lvl + 1));
 
   function gameIdle() {
     G = null;
@@ -595,18 +625,19 @@
     $('#gLives').innerHTML = heartHtml(3);
     $('#gScore').textContent = '★ 0';
     $('#gBar').style.width = '0%';
-    $('#gSpeed').textContent = 'Lv 1';
-    $('#gBest').textContent = store.best.game[gLevel.value] || 0;
+    $('#gSpeed').textContent = lvName(gameCfg().lvl);
+    syncGameSetup();
   }
   const heartHtml = n => [0, 1, 2].map(i => `<span class="${i < n ? 'on' : ''}">♥</span>`).join('');
 
   function gameStart() {
-    const li = +gLevel.value;
-    const keys = LESSONS[li].keys.filter(k => /[a-z]/.test(k));
-    G = { li, keys, rows: [], fx: [], score: 0, hits: 0, wrong: 0, lives: 3, last: performance.now(), running: true, paused: false, errAt: -1e9, over: false };
+    const li = +gLevel.value, cfg = gameCfg();
+    const keys = gameKeys(li, cfg.set);
+    G = { li, set: cfg.set, lvl: cfg.lvl, lv: GAME_LV[cfg.lvl] || GAME_LV[1], keys, rows: [], fx: [], score: 0, hits: 0, wrong: 0, lives: 3, last: performance.now(), running: true, paused: false, errAt: -1e9, over: false };
     for (let p = 2; p <= 5; p++) G.rows.push(gameRow(p));
     $('#gOverlay').classList.remove('show', 'paused');
     $('#gLives').innerHTML = heartHtml(3);
+    $('#gSpeed').textContent = `${lvName(G.lvl)} · 1`;
   }
   function gameRow(pos) {
     let ch = G.keys[Math.floor(Math.random() * G.keys.length)];
@@ -614,7 +645,7 @@
     if (ch === prev && G.keys.length > 1) ch = G.keys[(G.keys.indexOf(ch) + 1) % G.keys.length];
     return { ch, info: KB.charInfo(ch), pos };
   }
-  const gameSpeed = () => Math.min(3, 0.55 + Math.floor(G.hits / 10) * 0.1);
+  const gameSpeed = () => Math.min(3.2, G.lv.v + Math.floor(G.hits / 10) * G.lv.inc);
 
   function gameKey(key) {
     if (!G) { if (key === ' ') gameStart(); return; }
@@ -629,7 +660,7 @@
       G.fx.push({ ch: target.ch, info: target.info, pos: target.pos, at: now, hit: true });
       $('#gScore').textContent = '★ ' + G.score;
       $('#gBar').style.width = ((G.hits % 10) / 10 * 100) + '%';
-      $('#gSpeed').textContent = 'Lv ' + (1 + Math.floor(G.hits / 10));
+      $('#gSpeed').textContent = `${lvName(G.lvl)} · ${1 + Math.floor(G.hits / 10)}`;
     } else {
       G.wrong++; G.errAt = now;
     }
@@ -671,9 +702,9 @@
   function gameOver() {
     G.over = true;
     const total = G.hits + G.wrong, acc = total ? Math.round(G.hits / total * 100) : 100;
-    const k = String(G.li), prev = store.best.game[k] || 0, isBest = G.score > prev;
+    const k = gameBestKey(G.li, G.set, G.lvl), prev = store.best.game[k] || 0, isBest = G.score > prev;
     if (isBest) store.best.game[k] = G.score;
-    logHistory({ type: 'game', li: G.li, score: G.score, acc });
+    logHistory({ type: 'game', li: G.li, set: G.set, lvl: G.lvl, score: G.score, acc });
     save();
     $('#gBest').textContent = store.best.game[k] || 0;
     const again = () => { closeModal(); gameStart(); };
@@ -810,7 +841,7 @@
       } else if (x.type === 'test') {
         what = t('hist.test', { d: x.dur }) + (x.mode === 'words' ? t('hist.words') : '') + (x.lang === 'en' ? ' · EN' : x.lang === 'id' ? ' · ID' : ''); res = `${x.wpm} WPM · ${x.acc}%`;
       } else {
-        what = `Game (Lesson ${LESSONS[x.li] ? LESSONS[x.li].n : '?'})`; res = `${t('hist.score', { s: x.score })} · ${x.acc}%`;
+        what = `Game (Lesson ${LESSONS[x.li] ? LESSONS[x.li].n : '?'}${x.lvl != null ? ' · ' + lvName(x.lvl) : ''})`; res = `${t('hist.score', { s: x.score })} · ${x.acc}%`;
       }
       return `<tr><td class="muted">${fmtDate(x.t)}</td><td>${what}</td><td class="r">${res}</td></tr>`;
     };

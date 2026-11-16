@@ -212,7 +212,15 @@ h1 { font-size: 27px; margin: 4px 0; letter-spacing: -.01em; }
 .overlay.show { display: flex; }
 .overlay h2 { margin: 0; font-size: 26px; }
 .overlay p { margin: 0; max-width: 420px; color: var(--muted); }
-.overlay.paused label { display: none; }
+.overlay.paused label, .overlay.paused .g-setup, .overlay.paused .g-keys { display: none; }
+.stage:has(.overlay.show:not(.paused)) { min-height: 360px; }
+.g-setup { display: grid; grid-template-columns: auto auto; gap: 8px 12px; align-items: center; justify-items: start; margin-top: 4px; }
+.g-lab { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; justify-self: end; }
+.g-setup .seg { margin: 0 !important; }
+.g-setup .seg button { padding: 6px 12px; font-size: 14px; }
+.g-setup select { font: inherit; font-size: 15px; padding: 6px 10px; border-radius: 9px; border: 1px solid var(--line); background: #fff; color: var(--ink); max-width: 340px; }
+.g-keys { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 560px; min-height: 26px; }
+.g-keys span { min-width: 24px; height: 24px; padding: 0 4px; border-radius: 6px; border: 1.5px solid; display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: 13px; }
 .overlay select { font: inherit; padding: 6px 10px; border-radius: 9px; border: 1px solid var(--line); margin-left: 6px; }
 
 /* ---------- profiles & achievements ---------- */

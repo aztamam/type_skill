@@ -55,7 +55,9 @@
 
       // game
       'game.desc': 'Huruf datang dari jauh. Ketik huruf yang <b>paling dekat</b> sebelum lewat. Lewat 3 kali = game over.',
-      'game.level': 'Huruf dari', 'game.start': 'Mulai', 'game.resume': 'Lanjut', 'game.paused': 'Jeda',
+      'game.lessonLabel': 'Lesson', 'game.setLabel': 'Huruf', 'game.levelLabel': 'Level',
+      'game.setAll': 'Semua s/d lesson ini', 'game.setNew': 'Huruf baru lesson ini',
+      'game.lv1': 'Santai', 'game.lv2': 'Mudah', 'game.lv3': 'Sedang', 'game.lv4': 'Cepat', 'game.lv5': 'Ahli', 'game.start': 'Mulai', 'game.resume': 'Lanjut', 'game.paused': 'Jeda',
       'game.restart': 'Main ulang', 'game.note': 'Kecepatan naik setiap 10 huruf benar. Tekan Esc untuk jeda.',
       'game.letters': '{n} huruf', 'game.newBest': 'Skor tertinggi baru! 🎉', 'game.score': 'Skor',
       'game.change': 'Ganti level', 'game.again': 'Main lagi',
@@ -195,7 +197,9 @@
       'tip8': '<h3>8. Short but regular practice</h3><p>15–20 minutes every day works far better than 2 hours once a week. Take a break when your hands get tired.</p>',
 
       'game.desc': 'Letters come at you from far away. Type the <b>closest</b> one before it passes. Miss 3 = game over.',
-      'game.level': 'Letters from', 'game.start': 'Start', 'game.resume': 'Resume', 'game.paused': 'Paused',
+      'game.lessonLabel': 'Lesson', 'game.setLabel': 'Letters', 'game.levelLabel': 'Level',
+      'game.setAll': 'All up to this lesson', 'game.setNew': "This lesson's new keys",
+      'game.lv1': 'Relaxed', 'game.lv2': 'Easy', 'game.lv3': 'Medium', 'game.lv4': 'Fast', 'game.lv5': 'Expert', 'game.start': 'Start', 'game.resume': 'Resume', 'game.paused': 'Paused',
       'game.restart': 'Play again', 'game.note': 'Speed goes up every 10 correct letters. Press Esc to pause.',
       'game.letters': '{n} letters', 'game.newBest': 'New high score! 🎉', 'game.score': 'Score',
       'game.change': 'Change level', 'game.again': 'Play again',

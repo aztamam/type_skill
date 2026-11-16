@@ -127,7 +127,15 @@
         <div class="overlay" id="gOverlay">
           <h2>Highway</h2>
           <p data-i18n-html="game.desc"></p>
-          <label><span data-i18n="game.level">Huruf dari</span> <select id="gLevel"></select></label>
+          <div class="g-setup">
+            <span class="g-lab" data-i18n="game.lessonLabel">Lesson</span>
+            <select id="gLevel"></select>
+            <span class="g-lab" data-i18n="game.setLabel">Huruf</span>
+            <div class="seg" id="gSet"><button data-s="all" data-i18n="game.setAll"></button><button data-s="new" data-i18n="game.setNew"></button></div>
+            <span class="g-lab" data-i18n="game.levelLabel">Level</span>
+            <div class="seg" id="gLvl"><button data-v="0" data-i18n="game.lv1"></button><button data-v="1" data-i18n="game.lv2"></button><button data-v="2" data-i18n="game.lv3"></button><button data-v="3" data-i18n="game.lv4"></button><button data-v="4" data-i18n="game.lv5"></button></div>
+          </div>
+          <div class="g-keys" id="gKeys"></div>
           <button class="btn" id="gStart">Mulai <kbd>Space</kbd></button>
         </div>
       </div>
